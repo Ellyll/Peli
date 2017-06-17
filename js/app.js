@@ -41,7 +41,7 @@ var Peli;
                 return new Peli.Pel(x, y, rhifPwyntNesaf);
             });
             const symudPel = (pel, siap, eiliadau) => {
-                const cyflymder = 50;
+                const cyflymder = 400;
                 const cyfanswmPellterIDeithio = cyflymder * eiliadau;
                 let pellterIDeithio = cyfanswmPellterIDeithio;
                 let lleoliad = pel;

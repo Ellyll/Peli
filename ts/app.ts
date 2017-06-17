@@ -47,7 +47,7 @@ namespace Peli {
             });
 
             const symudPel = (pel : Pel, siap : Siap, eiliadau : number) : Pel => {
-                const cyflymder = 50;
+                const cyflymder = 400;
                 const cyfanswmPellterIDeithio = cyflymder * eiliadau;
                 let pellterIDeithio = cyfanswmPellterIDeithio;
                 let lleoliad : Fector2D = pel;

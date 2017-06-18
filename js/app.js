@@ -26,13 +26,20 @@ var Peli;
             const nolRadiws = (n) => {
                 return 20 + ((n - 2) * camR);
             };
+            const niferOchrauCychwyn = 3;
+            const niferOchrauGorffen = 15;
             const siapiau = [];
-            for (let n = 3; n <= 15; n++) {
-                //const radiws = 20 + (n*15);
+            for (let n = niferOchrauCychwyn; n <= niferOchrauGorffen; n++) {
                 const radiws = nolRadiws(n);
                 const siap = cynhyrchuSiap(n, radiws, xCanol, yCanol);
                 siapiau.push(siap);
             }
+            const colyn = Math.ceil(siapiau.length / 2) - 1;
+            const cyflymderau = siapiau.map((siap, i) => {
+                const a = siap.perimedr / 5;
+                const j = i <= colyn ? i : siapiau.length - 1 - i;
+                return a + (j * a * 0.5);
+            });
             const peliCychwynol = siapiau.map(s => {
                 // Hanner ffordd ar hyd y llinell gyntaf
                 const x = (s.pwyntiau[0].x + s.pwyntiau[1].x) / 2;
@@ -40,8 +47,8 @@ var Peli;
                 const rhifPwyntNesaf = 1;
                 return new Peli.Pel(x, y, rhifPwyntNesaf);
             });
-            const symudPel = (pel, siap, eiliadau) => {
-                const cyflymder = 400;
+            const symudPel = (pel, siap, cyflymder, eiliadau) => {
+                //const cyflymder = 400;
                 const cyfanswmPellterIDeithio = cyflymder * eiliadau;
                 let pellterIDeithio = cyfanswmPellterIDeithio;
                 let lleoliad = pel;
@@ -61,7 +68,7 @@ var Peli;
             };
             const diweddaru = (amserDiwethaf, amser, peli) => {
                 const dt = amser - amserDiwethaf;
-                peli = peli.map((pel, idx) => symudPel(pel, siapiau[idx], dt / 1000));
+                peli = peli.map((pel, idx) => symudPel(pel, siapiau[idx], cyflymderau[idx], dt / 1000));
                 lliniadydd.lluniadu(siapiau, peli);
                 window.requestAnimationFrame((rwan) => { diweddaru(amser, rwan, peli); });
             };
@@ -304,6 +311,14 @@ var Peli;
         }
         get niferOchrau() {
             return this.pwyntiau.length;
+        }
+        get perimedr() {
+            let pm = 0;
+            for (let i = 0; i < this.pwyntiau.length - 1; i++) {
+                pm += this.pwyntiau[i].pellterI(this.pwyntiau[i + 1]);
+            }
+            pm += this.pwyntiau[this.pwyntiau.length - 1].pellterI(this.pwyntiau[0]);
+            return pm;
         }
     }
     Peli.Siap = Siap;

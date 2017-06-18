@@ -30,13 +30,22 @@ namespace Peli {
                 return 20+((n-2)*camR);
             };
 
+            const niferOchrauCychwyn = 3;
+            const niferOchrauGorffen = 15;
             const siapiau : Siap[] = [];
-            for (let n=3 ; n<=15 ; n++) {
-                //const radiws = 20 + (n*15);
+            for (let n=niferOchrauCychwyn ; n<=niferOchrauGorffen ; n++) {
                 const radiws = nolRadiws(n);
                 const siap = cynhyrchuSiap(n, radiws, xCanol, yCanol);
                 siapiau.push(siap);
             }
+
+            const colyn = Math.ceil(siapiau.length/2)-1;
+            const cyflymderau = siapiau.map( (siap, i) => {
+                const a = siap.perimedr / 5;
+                const j = i<=colyn ? i : siapiau.length-1-i;
+                return a+(j*a*0.5);
+            });
+
 
             const peliCychwynol : Pel[] = siapiau.map(s => {
                 // Hanner ffordd ar hyd y llinell gyntaf
@@ -46,8 +55,8 @@ namespace Peli {
                 return new Pel(x, y, rhifPwyntNesaf);
             });
 
-            const symudPel = (pel : Pel, siap : Siap, eiliadau : number) : Pel => {
-                const cyflymder = 400;
+            const symudPel = (pel : Pel, siap : Siap, cyflymder: number, eiliadau : number) : Pel => {
+                //const cyflymder = 400;
                 const cyfanswmPellterIDeithio = cyflymder * eiliadau;
                 let pellterIDeithio = cyfanswmPellterIDeithio;
                 let lleoliad : Fector2D = pel;
@@ -69,7 +78,7 @@ namespace Peli {
 
             const diweddaru = (amserDiwethaf : number, amser : number, peli : Pel[]) : void => {
                 const dt = amser - amserDiwethaf;
-                peli = peli.map( (pel, idx) => symudPel(pel, siapiau[idx], dt/1000));
+                peli = peli.map( (pel, idx) => symudPel(pel, siapiau[idx], cyflymderau[idx], dt/1000));
                 lliniadydd.lluniadu(siapiau, peli);
                 window.requestAnimationFrame((rwan) => { diweddaru(amser, rwan, peli); });
             };
